@@ -1,12 +1,15 @@
 {
-  "name": "tennisbooker",
-  "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
-    "start": "nuxt start"
-  },
-  "dependencies": {
-    "nuxt": "^2.14.0"
-  }
+    "name": "tennisbooker",
+    "scripts": {
+        "dev": "nuxt",
+        "build": "nuxt build",
+        "generate": "nuxt generate",
+        "start": "nuxt start"
+    },
+    "dependencies": {
+        "nuxt": "^2.14.0"
+    },
+    "devDependencies": {
+        "@nuxtjs/vuetify": "^1.11.2"
+    }
 }
