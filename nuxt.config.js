@@ -1,9 +1,9 @@
-const title = 'Tennis booker'
-const description = 'Tennis booker est un outil de réservation de terrain de tennis'
+const title = 'Réservation de terrain de tennis'
+const description = 'Outil pour la réservation de terrain de tennis'
 
 export default {
     head: {
-        titleTemplate: 'Tennis booker',
+        titleTemplate: 'Réservation de terrain de tennis',
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -18,5 +18,12 @@ export default {
             { rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css' },
         ],
     },
-    buildModules: ['@nuxtjs/vuetify'],
+    buildModules: [
+        [
+            '@nuxtjs/vuetify',
+            {
+                lang: { current: 'fr' },
+            },
+        ],
+    ],
 }

@@ -1,19 +1,22 @@
 <template>
     <div>
-        <h1>Tennis booker</h1>
-        <v-sheet height="600">
-            <v-calendar
-                ref="calendar"
-                v-model="value"
-                :weekdays="weekday"
-                :type="type"
-                :events="events"
-                :event-overlap-mode="mode"
-                :event-overlap-threshold="30"
-                :event-color="getEventColor"
-                @change="getEvents"
-            ></v-calendar>
-        </v-sheet>
+        <h1>Réservation de terrain de tennis</h1>
+        <v-calendar
+            ref="calendar"
+            v-model="value"
+            :weekdays="weekday"
+            :type="type"
+            :events="events"
+            :first-time="'07:00'"
+            :interval-count="16"
+            :interval-height="34"
+            :event-overlap-mode="mode"
+            :event-overlap-threshold="30"
+            :event-color="getEventColor"
+            @mousedown:event="clickEvent"
+            @mousedown:time="clickTime"
+            @change="getEvents"
+        ></v-calendar>
     </div>
 </template>
 
@@ -21,47 +24,48 @@
 export default {
     data: () => ({
         type: 'week',
-        types: ['month', 'week', 'day', '4day'],
         mode: 'stack',
         modes: ['stack', 'column'],
-        weekday: [0, 1, 2, 3, 4, 5, 6],
-        weekdays: [
-            { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
-            { text: 'Mon - Sun', value: [1, 2, 3, 4, 5, 6, 0] },
-            { text: 'Mon - Fri', value: [1, 2, 3, 4, 5] },
-            { text: 'Mon, Wed, Fri', value: [1, 3, 5] },
-        ],
+        weekday: [1, 2, 3, 4, 5, 6, 0],
         value: '',
         events: [],
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     methods: {
-        getEvents({ start, end }) {
-            const events = []
-
-            const min = new Date(`${start.date}T00:00:00`)
-            const max = new Date(`${end.date}T23:59:59`)
-            const days = (max.getTime() - min.getTime()) / 86400000
-            const eventCount = this.rnd(days, days + 20)
-
-            for (let i = 0; i < eventCount; i++) {
-                const allDay = this.rnd(0, 3) === 0
-                const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-                const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-                const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-                const second = new Date(first.getTime() + secondTimestamp)
-
-                events.push({
-                    name: this.names[this.rnd(0, this.names.length - 1)],
-                    start: first,
-                    end: second,
-                    color: this.colors[this.rnd(0, this.colors.length - 1)],
-                    timed: !allDay,
-                })
+        toTime(tms) {
+            return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime()
+        },
+        roundTime(time, down = true) {
+            const roundTo = 30 // minutes
+            const roundDownTime = roundTo * 60 * 1000
+            return down ? time - (time % roundDownTime) : time + (roundDownTime - (time % roundDownTime))
+        },
+        clickEvent({ event, timed }) {
+            if (event && timed) {
+                this.clickedEvent = event
+                this.events.splice(this.events.indexOf(event), 1)
+            }
+        },
+        clickTime(tms) {
+            if (this.clickedEvent) {
+                this.clickedEvent = null
+                return
+            }
+            const mouse = this.toTime(tms)
+            this.createStart = this.roundTime(mouse)
+            this.createEvent = {
+                name: `Event #${this.events.length}`,
+                color: 'blue',
+                start: this.createStart,
+                end: this.createStart + 30 * 60 * 1000,
+                timed: true,
             }
 
-            this.events = events
+            this.events.push(this.createEvent)
+        },
+        getEvents({ start, end }) {
+            this.events = []
         },
         getEventColor(event) {
             return event.color
@@ -72,25 +76,3 @@ export default {
     },
 }
 </script>
-
-<style lang="scss">
-.v-current-time {
-    height: 2px;
-    background-color: #ea4335;
-    position: absolute;
-    left: -1px;
-    right: 0;
-    pointer-events: none;
-
-    &.first::before {
-        content: '';
-        position: absolute;
-        background-color: #ea4335;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        margin-top: -5px;
-        margin-left: -6.5px;
-    }
-}
-</style>
