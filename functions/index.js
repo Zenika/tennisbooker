@@ -10,6 +10,7 @@ exports.getReservations = functions.https.onRequest(async (req, res) => {
     let output = []
     snapshot.forEach(doc => {
         output.push({
+            id: doc.id,
             timestamp: doc.data().timestamp._seconds,
         })
     })
@@ -23,5 +24,11 @@ exports.addReservation = functions.https.onCall(async (data, context) => {
         .firestore()
         .collection('reservations')
         .add(reservation)
+    return 'ok'
+})
+
+exports.deleteReservation = functions.https.onCall(async (data, context) => {
+    // TODO : Vérifier si c'est la personne qui l'a créé qui est connecté ?
+    const res = await db.collection('reservations').doc(data.id).delete();
     return 'ok'
 })

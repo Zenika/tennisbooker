@@ -34,9 +34,11 @@ export default {
     }),
     async mounted() {
         const reservations = await this.$axios.$get('getReservations')
+        console.log('resas', reservations)
         this.events = reservations.map(reservation => ({
             name: `Reservation`,
             color: 'blue',
+            id: reservation.id,
             start: reservation.timestamp * 1000,
             end: reservation.timestamp * 1000 + 30 * 60 * 1000,
             timed: true,
@@ -54,6 +56,7 @@ export default {
         clickEvent({ event, timed }) {
             if (event && timed) {
                 this.clickedEvent = event
+                this.$axios.$post('deleteReservation', { data: { id: event.id } })
                 this.events.splice(this.events.indexOf(event), 1)
             }
         },
