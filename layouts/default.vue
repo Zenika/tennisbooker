@@ -8,6 +8,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import FirebaseLogin from '../components/FirebaseLogin'
+
 export default {
     components: {
         FirebaseLogin,

@@ -64,7 +64,6 @@ export default {
             }
             const mouse = this.toTime(tms)
             this.createStart = this.roundTime(mouse)
-            console.log('chcr', this.createStart)
             this.createEvent = {
                 name: `Event #${this.events.length}`,
                 color: 'blue',

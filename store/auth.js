@@ -1,5 +1,5 @@
 export const state = () => ({
-    loggedIn: 0,
+    loggedIn: false,
 })
 
 export const getters = {
@@ -8,7 +8,6 @@ export const getters = {
 
 export const mutations = {
     logIn(state) {
-        console.log('store set login true')
-        state.loggedIn = 1
+        state.loggedIn = true
     },
 }

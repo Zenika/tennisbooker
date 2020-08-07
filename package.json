@@ -2,8 +2,10 @@
     "name": "tennisbooker",
     "scripts": {
         "dev": "cross-env BASE_URL=http://localhost:5001/firetennisbooker/us-central1/ nuxt",
+        "dev:firebase": "firebase emulators:start",
         "build": "nuxt build",
         "generate": "cross-env BASE_URL=https://us-central1-firetennisbooker.cloudfunctions.net/ nuxt generate",
+        "generate:firebase": "firebase deploy --only functions",
         "start": "nuxt start"
     },
     "dependencies": {
