@@ -22,6 +22,12 @@ export default {
     },
     buildModules: [
         [
+            '@nuxtjs/axios',
+            {
+                baseURL: process.env.BASE_URL
+            }
+        ],
+        [
             '@nuxtjs/vuetify',
             {
                 lang: { current: 'fr' },

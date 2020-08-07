@@ -32,6 +32,16 @@ export default {
         colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
         names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
+    async mounted() {
+        const reservations = await this.$axios.$get('getReservations')
+        this.events = reservations.map(reservation => ({
+            name: `Reservation`,
+            color: 'blue',
+            start: reservation.timestamp * 1000,
+            end: reservation.timestamp * 1000 + 30 * 60 * 1000,
+            timed: true,
+        }))
+    },
     methods: {
         toTime(tms) {
             return new Date(tms.year, tms.month - 1, tms.day, tms.hour, tms.minute).getTime()
@@ -54,6 +64,7 @@ export default {
             }
             const mouse = this.toTime(tms)
             this.createStart = this.roundTime(mouse)
+            console.log('chcr', this.createStart)
             this.createEvent = {
                 name: `Event #${this.events.length}`,
                 color: 'blue',
@@ -63,6 +74,7 @@ export default {
             }
 
             this.events.push(this.createEvent)
+            this.$axios.$post('addReservation', { data: { timestamp: this.createStart / 1000 } })
         },
         getEvents({ start, end }) {
             this.events = []
